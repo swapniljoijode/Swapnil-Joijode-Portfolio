@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swapnil Joijode - Data Analyst & Power BI Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/framer-motion@6/dist/framer-motion.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -15,23 +18,36 @@
         }
 
         :root {
-            --bg-dark: #0f172a;
-            --bg-darker: #020617;
-            --surface: #1e293b;
-            --surface-light: #334155;
-            --accent: #06b6d4;
-            --accent-light: #22d3ee;
-            --accent-dark: #0891b2;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #334155;
+            --bg-primary: #09090b;
+            --bg-secondary: #0f0f12;
+            --bg-tertiary: #16161a;
+            --surface: #1a1a22;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #00f7ff;
+            --accent-tertiary: #0099cc;
+            --text-primary: #f8f9fa;
+            --text-secondary: #b0b4b8;
+            --text-tertiary: #8a8d92;
+            --border-color: #252530;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        html {
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+            background-attachment: fixed;
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .playfair {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
         }
 
         .scroll-smooth {
@@ -39,48 +55,64 @@
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .glass-effect {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-        }
-
-        .card-hover {
+            background: rgba(15, 15, 18, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 217, 255, 0.1);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
-            border-color: rgba(6, 182, 212, 0.3);
+        .glass-effect:hover {
+            background: rgba(15, 15, 18, 0.7);
+            border-color: rgba(0, 217, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.1);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-            color: white;
-            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%);
+            color: var(--bg-primary);
+            padding: 14px 32px;
             border-radius: 8px;
             font-weight: 600;
+            font-size: 14px;
             border: none;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.3);
         }
 
         .btn-primary:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-primary);
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid var(--accent-primary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-3px);
         }
 
         .fade-in-up {
@@ -91,11 +123,25 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
 
@@ -108,97 +154,143 @@
         .stagger > *:nth-child(3) { animation-delay: 0.3s; }
         .stagger > *:nth-child(4) { animation-delay: 0.4s; }
         .stagger > *:nth-child(5) { animation-delay: 0.5s; }
+        .stagger > *:nth-child(6) { animation-delay: 0.6s; }
 
-        .skill-tag {
+        .skill-badge {
             display: inline-block;
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            color: var(--accent-light);
-            padding: 6px 14px;
+            background: rgba(0, 217, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            color: var(--accent-primary);
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 500;
             margin: 6px 6px 6px 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.3px;
         }
 
-        .skill-tag:hover {
-            background: rgba(6, 182, 212, 0.2);
-            border-color: var(--accent);
-            transform: scale(1.05);
+        .skill-badge:hover {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: var(--accent-primary);
+            transform: scale(1.08);
+            box-shadow: 0 8px 16px rgba(0, 217, 255, 0.2);
+        }
+
+        .project-card {
+            background: rgba(26, 26, 34, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .project-card:hover {
+            border-color: rgba(0, 217, 255, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 217, 255, 0.15);
+            background: rgba(26, 26, 34, 0.8);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
         }
 
         .timeline {
             position: relative;
-            padding: 20px 0;
+            padding: 40px 0;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 20px;
+            left: 30px;
             top: 0;
             bottom: 0;
-            width: 2px;
-            background: linear-gradient(180deg, var(--accent) 0%, rgba(6, 182, 212, 0.2) 100%);
+            width: 1px;
+            background: linear-gradient(180deg, var(--accent-primary) 0%, rgba(0, 217, 255, 0.1) 100%);
         }
 
         .timeline-item {
-            margin-left: 70px;
-            padding-bottom: 40px;
+            margin-left: 100px;
+            margin-bottom: 50px;
             position: relative;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -55px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border: 3px solid var(--bg-dark);
+            left: -80px;
+            top: 8px;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent-primary);
             border-radius: 50%;
             transition: all 0.3s ease;
         }
 
         .timeline-item:hover::before {
-            width: 18px;
-            height: 18px;
-            left: -58px;
-            top: 2px;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
+            width: 20px;
+            height: 20px;
+            left: -83px;
+            top: 5px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
         }
 
         .success-toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: var(--success);
             color: white;
             padding: 16px 24px;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
             animation: slideInRight 0.4s ease-out forwards;
             z-index: 1000;
+            font-weight: 600;
         }
 
         .error-toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: var(--error);
             color: white;
             padding: 16px 24px;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
             animation: slideInRight 0.4s ease-out forwards;
             z-index: 1000;
+            font-weight: 600;
         }
 
         @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(100px);
+                transform: translateX(120px);
             }
             to {
                 opacity: 1;
@@ -206,331 +298,418 @@
             }
         }
 
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-            margin: 40px 0;
-        }
-
-        @media (max-width: 768px) {
-            .project-grid {
-                grid-template-columns: 1fr;
-            }
-            .timeline::before {
-                left: 15px;
-            }
-            .timeline-item {
-                margin-left: 60px;
-            }
-            .timeline-item::before {
-                left: -50px;
-            }
-        }
-
         input, textarea, select {
-            background: var(--surface) !important;
-            border: 1px solid var(--border) !important;
+            background: rgba(26, 26, 34, 0.8) !important;
+            border: 1px solid var(--border-color) !important;
             color: var(--text-primary) !important;
             border-radius: 8px !important;
             padding: 12px 16px !important;
             font-size: 14px !important;
+            font-family: 'Inter', sans-serif !important;
             transition: all 0.3s ease !important;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-tertiary) !important;
         }
 
         input:focus, textarea:focus, select:focus {
             outline: none !important;
-            border-color: var(--accent) !important;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1) !important;
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1) !important;
+            background: rgba(26, 26, 34, 1) !important;
         }
 
         textarea {
             resize: vertical;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300d9ff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border-color);
+            margin: 0 24px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                margin-left: 70px;
+            }
+            .timeline-item::before {
+                left: -50px;
+            }
+            .nav-divider {
+                display: none;
+            }
+            .playfair {
+                font-size: 32px !important;
+            }
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 80px 0;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-primary) 100%);
+            animation: loading 2s ease-in-out infinite;
+            z-index: 1001;
+        }
+
+        @keyframes loading {
+            0% { width: 0; }
+            50% { width: 100%; }
+            100% { width: 100%; }
         }
     </style>
 </head>
 <body class="scroll-smooth">
+    <!-- Loading Bar -->
+    <div class="loading-bar"></div>
+
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-effect border-b border-slate-700">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold gradient-text">Swapnil</div>
-            <div class="flex gap-8 max-sm:gap-4 text-sm">
+    <nav class="fixed top-0 w-full z-50 glass-effect border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="text-xl font-bold playfair gradient-text">Swapnil</div>
+            <div class="hidden md:flex gap-8 items-center text-sm">
                 <a href="#home" class="text-slate-300 hover:text-cyan-400 transition">Home</a>
-                <a href="#experience" class="text-slate-300 hover:text-cyan-400 transition">Experience</a>
-                <a href="#projects" class="text-slate-300 hover:text-cyan-400 transition">Projects</a>
-                <a href="#skills" class="text-slate-300 hover:text-cyan-400 transition">Skills</a>
+                <div class="nav-divider"></div>
+                <a href="#work" class="text-slate-300 hover:text-cyan-400 transition">Work</a>
+                <div class="nav-divider"></div>
+                <a href="#about" class="text-slate-300 hover:text-cyan-400 transition">About</a>
+                <div class="nav-divider"></div>
                 <a href="#contact" class="text-slate-300 hover:text-cyan-400 transition">Contact</a>
+                <div class="nav-divider"></div>
+                <a href="https://linkedin.com/in/swapniljoijode" target="_blank" class="text-slate-300 hover:text-cyan-400 transition">LinkedIn</a>
             </div>
+            <button class="md:hidden text-xl" onclick="alert('Menu will be implemented')">☰</button>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-6">
-        <div class="max-w-5xl text-center fade-in-up">
-            <h1 class="text-7xl max-sm:text-4xl font-bold mb-6 gradient-text leading-tight">
+        <div class="max-w-5xl text-center">
+            <div class="fade-in-up mb-6">
+                <span class="inline-block skill-badge" style="margin-bottom: 20px;">Data Analyst • Power BI • Python • SQL</span>
+            </div>
+            <h1 class="playfair text-7xl md:text-8xl font-bold mb-6 gradient-text leading-tight fade-in-up" style="animation-delay: 0.1s;">
                 Swapnil Sanjay Joijode
             </h1>
-            <p class="text-3xl max-sm:text-xl text-slate-300 mb-8">Data Analyst & Power BI Developer</p>
-            <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-                Designing reliable analytics systems with Python, SQL, and Power BI so teams can trust the numbers behind their decisions.
+            <p class="text-2xl md:text-3xl text-slate-300 mb-8 fade-in-up" style="animation-delay: 0.2s;">Data-driven analytics engineer building reliable systems teams trust</p>
+            <p class="text-lg text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed fade-in-up" style="animation-delay: 0.3s;">
+                I design and optimize analytics pipelines, build performant BI models, and translate data into decisions. Currently optimizing multi-GB datasets for retail analytics at scale.
             </p>
             
-            <div class="flex gap-4 justify-center mb-12 flex-wrap">
-                <div class="glass-effect px-6 py-3 rounded-lg fade-in-up" style="animation-delay: 0.2s;">
-                    <span class="text-cyan-400 font-semibold">🚀 Optimized</span> multi‑GB Power BI models
-                </div>
-                <div class="glass-effect px-6 py-3 rounded-lg fade-in-up" style="animation-delay: 0.3s;">
-                    <span class="text-cyan-400 font-semibold">📊 Built</span> end‑to‑end analytics pipelines
-                </div>
-                <div class="glass-effect px-6 py-3 rounded-lg fade-in-up" style="animation-delay: 0.4s;">
-                    <span class="text-cyan-400 font-semibold">💰</span> Financial risk & retail analytics
-                </div>
+            <div class="flex gap-4 justify-center flex-wrap mb-12 fade-in-up" style="animation-delay: 0.4s;">
+                <a href="#contact" class="btn-primary">Start a Project</a>
+                <a href="#work" class="btn-secondary">View My Work</a>
             </div>
 
-            <div class="flex gap-4 justify-center max-sm:flex-col">
-                <a href="#contact" class="btn-primary">Get In Touch</a>
-                <a href="#projects" class="border border-cyan-500 text-cyan-400 px-8 py-3 rounded-lg font-600 hover:bg-cyan-500 hover:text-slate-900 transition">View Work</a>
-            </div>
-
-            <div class="mt-16 flex gap-6 justify-center text-slate-400">
-                <a href="https://linkedin.com/in/swapniljoijode" target="_blank" class="hover:text-cyan-400 transition text-2xl">👔 LinkedIn</a>
-                <a href="https://github.com/swapnil" target="_blank" class="hover:text-cyan-400 transition text-2xl">🔗 GitHub</a>
-                <a href="mailto:swapniljoijode22@gmail.com" class="hover:text-cyan-400 transition text-2xl">📧 Email</a>
+            <div class="flex gap-8 justify-center text-slate-400 fade-in-up" style="animation-delay: 0.5s;">
+                <a href="mailto:swapniljoijode22@gmail.com" class="hover:text-cyan-400 transition text-sm font-medium">Email</a>
+                <a href="https://linkedin.com/in/swapniljoijode" target="_blank" class="hover:text-cyan-400 transition text-sm font-medium">LinkedIn</a>
+                <a href="https://github.com/swapnil" target="_blank" class="hover:text-cyan-400 transition text-sm font-medium">GitHub</a>
             </div>
         </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-24 px-6 bg-gradient-to-b from-slate-900/30 to-transparent">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-5xl font-bold gradient-text mb-16">Experience</h2>
-            
-            <div class="timeline">
-                <div class="timeline-item card-hover glass-effect p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-2">Power BI Developer</h3>
-                    <p class="text-slate-300 mb-4">Vision Group Retail · Hauppage, NY</p>
-                    <p class="text-slate-400 mb-4">August 2024 – November 2025</p>
-                    <ul class="space-y-3 text-slate-300">
-                        <li>✦ Optimized SQL Server and Power Query, reducing dataset refresh from ~10min to ~2min and eliminating daily failures</li>
-                        <li>✦ Implemented incremental refresh on ~24GB of data in Power BI with Databricks SQL and Snowflake</li>
-                        <li>✦ Modeled space and item share KPIs supporting 200+ retail locations</li>
-                        <li>✦ Met directly with stakeholders to refine KPI definitions and dashboard visuals</li>
-                    </ul>
-                </div>
+    <div class="section-divider"></div>
 
-                <div class="timeline-item card-hover glass-effect p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-2">Data Analyst</h3>
-                    <p class="text-slate-300 mb-4">TekSolve IT Solutions · Boston, MA</p>
-                    <p class="text-slate-400 mb-4">August 2023 – December 2023</p>
-                    <ul class="space-y-3 text-slate-300">
-                        <li>✦ Built SQL Server stored procedures and Python pipelines to enforce HR data validation</li>
-                        <li>✦ Designed star-schema Power BI models across 15 HR/payroll reports</li>
-                        <li>✦ Traced and fixed payroll discrepancies at the source, lowering error rates</li>
-                        <li>✦ Reduced null and duplicate rates from 0.17 and 0.53 to zero</li>
-                    </ul>
-                </div>
-
-                <div class="timeline-item card-hover glass-effect p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-2">Senior Business Analyst</h3>
-                    <p class="text-slate-300 mb-4">Quantum Phinance Consulting · Mumbai, India</p>
-                    <p class="text-slate-400 mb-4">January 2020 – December 2021</p>
-                    <ul class="space-y-3 text-slate-300">
-                        <li>✦ Analyzed 100 loan and investment assets using VaR and Monte Carlo simulations</li>
-                        <li>✦ Identified 10 high-risk positions, enabling decisions to terminate 3, hedge 5, and recover 2</li>
-                        <li>✦ Built SQL workflows for MIS, cashflow, and balance reports, accelerating delivery from 10th to 5th of month</li>
-                        <li>✦ Partnered with client teams to embed analytics into governance reviews</li>
-                    </ul>
-                </div>
+    <!-- Featured Work Section -->
+    <section id="work" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-20 fade-in-up">
+                <h2 class="playfair text-5xl md:text-6xl font-bold mb-4">Featured Work</h2>
+                <p class="text-slate-400 text-lg max-w-2xl">Showcasing projects that demonstrate impact, technical depth, and real-world problem-solving across analytics and data engineering.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-24 px-6">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-5xl font-bold gradient-text mb-16">Projects</h2>
             
-            <div class="project-grid">
-                <div class="card-hover glass-effect p-8 rounded-lg overflow-hidden group">
-                    <div class="mb-6 h-40 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-600/30 transition">
-                        <span class="text-5xl">📊</span>
-                    </div>
+            <div class="bento-grid stagger">
+                <div class="project-card">
+                    <span class="project-icon">📊</span>
                     <h3 class="text-xl font-bold text-cyan-400 mb-3">Multi-Channel Brand Space Analytics</h3>
                     <p class="text-sm text-slate-400 mb-4">Power BI · DAX · SQL · Dataflows</p>
-                    <p class="text-slate-300 mb-4 text-sm leading-relaxed">
-                        Built a partitioned Power BI dashboard over 12 months modeling space share by category and store group. Enabled space and assortment decisions by surfacing underperforming store groups and brands.
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Built a partitioned Power BI dashboard modeling space share by category and store group across 200+ retail locations. Enabled space and assortment decisions by surfacing underperforming brands in real-time.
                     </p>
+                    <p class="text-xs text-slate-500">12+ months • Vision Group Retail</p>
                 </div>
 
-                <div class="card-hover glass-effect p-8 rounded-lg overflow-hidden group">
-                    <div class="mb-6 h-40 bg-gradient-to-br from-emerald-500/20 to-teal-600/20 rounded-lg flex items-center justify-center group-hover:from-emerald-500/30 group-hover:to-teal-600/30 transition">
-                        <span class="text-5xl">🔮</span>
-                    </div>
+                <div class="project-card">
+                    <span class="project-icon">🔮</span>
                     <h3 class="text-xl font-bold text-cyan-400 mb-3">OTT User Churn Prediction</h3>
-                    <p class="text-sm text-slate-400 mb-4">Python · AWS Glue · SageMaker · Flask</p>
-                    <p class="text-slate-300 mb-4 text-sm leading-relaxed">
-                        Developed end-to-end pipelines to engineer temporal churn features and trained classification models evaluated with F1 and precision metrics. Deployed Flask API on AWS for real-time churn scoring.
+                    <p class="text-sm text-slate-400 mb-4">Python · AWS · SageMaker · Flask</p>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Engineered temporal churn features and trained classification models (F1, precision) to prioritize high-risk users. Deployed Flask API on AWS for real-time churn scoring and targeted retention.
                     </p>
+                    <p class="text-xs text-slate-500">Case Study • Production Deployment</p>
                 </div>
 
-                <div class="card-hover glass-effect p-8 rounded-lg overflow-hidden group">
-                    <div class="mb-6 h-40 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-lg flex items-center justify-center group-hover:from-orange-500/30 group-hover:to-red-600/30 transition">
-                        <span class="text-5xl">🎓</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-cyan-400 mb-3">Student Performance Analysis</h3>
-                    <p class="text-sm text-slate-400 mb-4">Python · sklearn · XGBoost</p>
-                    <p class="text-slate-300 mb-4 text-sm leading-relaxed">
-                        Trained Random Forest and XGBoost models to predict students at academic risk. Used feature importance to explain drivers to non-technical stakeholders.
-                    </p>
-                </div>
-
-                <div class="card-hover glass-effect p-8 rounded-lg overflow-hidden group">
-                    <div class="mb-6 h-40 bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-600/30 transition">
-                        <span class="text-5xl">💳</span>
-                    </div>
+                <div class="project-card">
+                    <span class="project-icon">💳</span>
                     <h3 class="text-xl font-bold text-cyan-400 mb-3">Pricing Sensitivity Analysis</h3>
                     <p class="text-sm text-slate-400 mb-4">SQL · Power BI · Python · Statistics</p>
-                    <p class="text-slate-300 mb-4 text-sm leading-relaxed">
-                        Analyzed ~1.5M transactions over 12 months to quantify pricing and promotion impact. Built scenario views showing revenue impact under different discount strategies.
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Analyzed ~1.5M transactions to quantify pricing and promotion impact on revenue. Built scenario views demonstrating revenue impact under 8 different discount strategies.
                     </p>
+                    <p class="text-xs text-slate-500">12 months data • Strategic insights</p>
+                </div>
+
+                <div class="project-card">
+                    <span class="project-icon">🎓</span>
+                    <h3 class="text-xl font-bold text-cyan-400 mb-3">Student Performance Prediction</h3>
+                    <p class="text-sm text-slate-400 mb-4">Python · sklearn · XGBoost</p>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Trained Random Forest and XGBoost models on attendance and behavioral data to identify at-risk students. Used feature importance to communicate drivers to non-technical stakeholders.
+                    </p>
+                    <p class="text-xs text-slate-500">Academic Case Study</p>
+                </div>
+
+                <div class="project-card">
+                    <span class="project-icon">⚙️</span>
+                    <h3 class="text-xl font-bold text-cyan-400 mb-3">HR Data Quality Pipeline</h3>
+                    <p class="text-sm text-slate-400 mb-4">SQL Server · Python · Power BI</p>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Built stored procedures, triggers, and Python pipelines to enforce validation rules. Reduced null rates from 17% to 0% and duplicates from 53% to 0% across 400+ employee records.
+                    </p>
+                    <p class="text-xs text-slate-500">TekSolve IT Solutions</p>
+                </div>
+
+                <div class="project-card">
+                    <span class="project-icon">📈</span>
+                    <h3 class="text-xl font-bold text-cyan-400 mb-3">Financial Risk Analytics</h3>
+                    <p class="text-sm text-slate-400 mb-4">VaR · Monte Carlo · SQL</p>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Analyzed 100 loan and investment assets using VaR and Monte Carlo simulations. Identified 10 high-risk positions, enabling leadership to terminate 3, hedge 5, and recover 2.
+                    </p>
+                    <p class="text-xs text-slate-500">Quantum Phinance • $XX impact</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-24 px-6 bg-gradient-to-b from-slate-900/30 to-transparent">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-5xl font-bold gradient-text mb-16">Skills</h2>
-            
-            <div class="space-y-12">
+    <div class="section-divider"></div>
+
+    <!-- About & Experience Section -->
+    <section id="about" class="py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-20 mb-32">
                 <div>
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-6">Analytics & Machine Learning</h3>
-                    <div class="flex flex-wrap">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">SQL</span>
-                        <span class="skill-tag">Power BI</span>
-                        <span class="skill-tag">Tableau</span>
-                        <span class="skill-tag">Data Modeling</span>
-                        <span class="skill-tag">Statistical Analysis</span>
-                        <span class="skill-tag">A/B Testing</span>
-                        <span class="skill-tag">Exploratory Data Analysis</span>
-                        <span class="skill-tag">Forecasting</span>
-                        <span class="skill-tag">Machine Learning</span>
+                    <h2 class="playfair text-5xl md:text-6xl font-bold mb-8 fade-in-up">About</h2>
+                    <div class="space-y-6 text-slate-300 text-lg fade-in-up" style="animation-delay: 0.1s;">
+                        <p>
+                            I'm a data analyst and engineer focused on building analytics systems teams can trust. My background spans financial risk, HR operations, and retail analytics—giving me a broad perspective on how data drives decision-making across industries.
+                        </p>
+                        <p>
+                            Currently, I optimize large-scale Power BI and SQL models at Vision Group Retail, ensuring fast, reliable access to operational KPIs. I'm comfortable with SQL Server, Databricks, Snowflake, Python, and modern BI stacks.
+                        </p>
+                        <p>
+                            When I'm not building pipelines, I'm exploring advanced analytics techniques—from VaR models and Monte Carlo simulations to churn prediction and feature engineering. I believe great analytics work requires equal parts technical depth and storytelling.
+                        </p>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-6">Data Platforms & Engineering</h3>
-                    <div class="flex flex-wrap">
-                        <span class="skill-tag">MS SQL Server</span>
-                        <span class="skill-tag">Snowflake</span>
-                        <span class="skill-tag">Databricks</span>
-                        <span class="skill-tag">AWS Glue</span>
-                        <span class="skill-tag">S3</span>
-                        <span class="skill-tag">MySQL</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">Data Engineering</span>
+                    <h3 class="text-2xl font-bold text-cyan-400 mb-12 fade-in-up" style="animation-delay: 0.2s;">Experience Timeline</h3>
+                    <div class="timeline stagger" style="animation-delay: 0.3s;">
+                        <div class="timeline-item">
+                            <div class="glass-effect p-6 rounded-lg">
+                                <h4 class="text-lg font-bold text-cyan-400 mb-2">Power BI Developer</h4>
+                                <p class="text-slate-300 mb-2">Vision Group Retail</p>
+                                <p class="text-xs text-slate-500 mb-3">Aug 2024 – Nov 2025 · Hauppage, NY</p>
+                                <ul class="text-sm text-slate-400 space-y-2">
+                                    <li>✦ Reduced refresh times from 10min to 2min across multi-GB datasets</li>
+                                    <li>✦ Implemented incremental refresh on ~24GB in Power BI</li>
+                                    <li>✦ Modeled KPIs for 200+ retail locations</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="glass-effect p-6 rounded-lg">
+                                <h4 class="text-lg font-bold text-cyan-400 mb-2">Data Analyst</h4>
+                                <p class="text-slate-300 mb-2">TekSolve IT Solutions</p>
+                                <p class="text-xs text-slate-500 mb-3">Aug 2023 – Dec 2023 · Boston, MA</p>
+                                <ul class="text-sm text-slate-400 space-y-2">
+                                    <li>✦ Built SQL procedures and Python pipelines for HR validation</li>
+                                    <li>✦ Designed star-schema models across 15 reports</li>
+                                    <li>✦ Reduced error rates from 0.17 and 0.53 to zero</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="glass-effect p-6 rounded-lg">
+                                <h4 class="text-lg font-bold text-cyan-400 mb-2">Senior Business Analyst</h4>
+                                <p class="text-slate-300 mb-2">Quantum Phinance Consulting</p>
+                                <p class="text-xs text-slate-500 mb-3">Jan 2020 – Dec 2021 · Mumbai, India</p>
+                                <ul class="text-sm text-slate-400 space-y-2">
+                                    <li>✦ Analyzed 100 assets using VaR and Monte Carlo models</li>
+                                    <li>✦ Identified 10 high-risk positions with recovery strategies</li>
+                                    <li>✦ Accelerated monthly reporting delivery by 5 days</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-6">Collaboration & Business</h3>
-                    <div class="flex flex-wrap">
-                        <span class="skill-tag">Git / GitLab</span>
-                        <span class="skill-tag">Agile / Scrum</span>
-                        <span class="skill-tag">JIRA</span>
-                        <span class="skill-tag">Business Performance</span>
-                        <span class="skill-tag">Storytelling</span>
-                        <span class="skill-tag">Project Management</span>
-                        <span class="skill-tag">People Analytics</span>
-                        <span class="skill-tag">SLA Tracking</span>
+            <!-- Skills Section -->
+            <div class="fade-in-up">
+                <h3 class="text-3xl font-bold text-cyan-400 mb-12">Skills & Tools</h3>
+                
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-300 mb-6">Analytics & ML</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">SQL</span>
+                            <span class="skill-badge">Power BI</span>
+                            <span class="skill-badge">Tableau</span>
+                            <span class="skill-badge">Data Modeling</span>
+                            <span class="skill-badge">Statistical Analysis</span>
+                            <span class="skill-badge">A/B Testing</span>
+                            <span class="skill-badge">Forecasting</span>
+                            <span class="skill-badge">Machine Learning</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-300 mb-6">Platforms & Data</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">MS SQL Server</span>
+                            <span class="skill-badge">Snowflake</span>
+                            <span class="skill-badge">Databricks</span>
+                            <span class="skill-badge">AWS Glue</span>
+                            <span class="skill-badge">S3</span>
+                            <span class="skill-badge">MySQL</span>
+                            <span class="skill-badge">PostgreSQL</span>
+                            <span class="skill-badge">Data Engineering</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-300 mb-6">Business & Tools</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">Git / GitLab</span>
+                            <span class="skill-badge">Agile / Scrum</span>
+                            <span class="skill-badge">JIRA</span>
+                            <span class="skill-badge">Storytelling</span>
+                            <span class="skill-badge">Project Management</span>
+                            <span class="skill-badge">People Analytics</span>
+                            <span class="skill-badge">Strategic Thinking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="mt-20 fade-in-up">
+                <h3 class="text-2xl font-bold text-cyan-400 mb-8">Education</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-effect p-8 rounded-lg">
+                        <h4 class="text-lg font-bold text-slate-300 mb-2">Clark University</h4>
+                        <p class="text-sm text-slate-400">Masters in Data Analytics (Information Management)</p>
+                        <p class="text-xs text-slate-500 mt-2">Worcester, MA · 2022–2023</p>
+                    </div>
+                    <div class="glass-effect p-8 rounded-lg">
+                        <h4 class="text-lg font-bold text-slate-300 mb-2">Shivajirao S. Jondhale College of Engineering</h4>
+                        <p class="text-sm text-slate-400">B.E. in Electronics and Telecommunication Engineering</p>
+                        <p class="text-xs text-slate-500 mt-2">Mumbai, India · 2015–2019</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Education Section -->
-    <section id="education" class="py-24 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-5xl font-bold gradient-text mb-16">Education</h2>
-            
-            <div class="space-y-8">
-                <div class="card-hover glass-effect p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-2">Clark University</h3>
-                    <p class="text-slate-300 mb-2">Masters in Data Analytics (Information Management)</p>
-                    <p class="text-slate-400">Worcester, MA · January 2022 – December 2023</p>
-                </div>
-
-                <div class="card-hover glass-effect p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold text-cyan-400 mb-2">Shivajirao S. Jondhale College of Engineering</h3>
-                    <p class="text-slate-300 mb-2">B.E. in Electronics and Telecommunication Engineering</p>
-                    <p class="text-slate-400">Mumbai, India · August 2015 – July 2019</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="section-divider"></div>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-24 px-6 bg-gradient-to-b from-slate-900/30 to-transparent">
-        <div class="max-w-2xl mx-auto">
-            <h2 class="text-5xl font-bold gradient-text mb-8 text-center">Let's Build Together</h2>
-            <p class="text-lg text-slate-300 text-center mb-16">
-                Whether you need stable BI models, predictive pipelines, or clean KPIs for your team, I'm here to help. Reach out anytime.
-            </p>
+    <section id="contact" class="py-32 px-6">
+        <div class="max-w-3xl mx-auto">
+            <div class="mb-16 fade-in-up">
+                <h2 class="playfair text-5xl md:text-6xl font-bold mb-6 gradient-text">Let's Talk</h2>
+                <p class="text-lg text-slate-400">
+                    Whether you have a project, a question, or just want to discuss analytics and data strategy—I'd love to hear from you. Fill out the form or reach out directly.
+                </p>
+            </div>
 
-            <div class="glass-effect p-10 rounded-lg border border-slate-700">
+            <div class="glass-effect p-10 rounded-lg mb-12 fade-in-up" style="animation-delay: 0.1s;">
                 <form id="contact-form" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Full Name *</label>
-                        <input type="text" name="from_name" placeholder="Your name" required />
+                        <label class="block text-sm font-bold text-slate-300 mb-3">Full Name *</label>
+                        <input type="text" name="from_name" placeholder="Your name" required class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Phone Number *</label>
-                        <input type="tel" name="phone" placeholder="Your phone number" required />
+                        <label class="block text-sm font-bold text-slate-300 mb-3">Email Address *</label>
+                        <input type="email" name="from_email" placeholder="your.email@example.com" required class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Email Address *</label>
-                        <input type="email" name="from_email" placeholder="your.email@example.com" required />
+                        <label class="block text-sm font-bold text-slate-300 mb-3">Phone Number *</label>
+                        <input type="tel" name="phone" placeholder="Your phone number" required class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Subject *</label>
-                        <select name="subject" required style="appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2306b6d4%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; padding-right: 40px;">
+                        <label class="block text-sm font-bold text-slate-300 mb-3">Subject *</label>
+                        <select name="subject" required class="w-full">
                             <option value="" disabled selected>Select a subject</option>
                             <option value="Project Collaboration">Project Collaboration</option>
                             <option value="Job Opportunity">Job Opportunity</option>
                             <option value="Freelance Work">Freelance Work</option>
                             <option value="Data Analytics Consultation">Data Analytics Consultation</option>
+                            <option value="Partnership Inquiry">Partnership Inquiry</option>
                             <option value="General Inquiry">General Inquiry</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Message *</label>
-                        <textarea name="message" placeholder="Tell me about your project or inquiry..." rows="5" required></textarea>
+                        <label class="block text-sm font-bold text-slate-300 mb-3">Project Brief / Message *</label>
+                        <textarea name="message" placeholder="Tell me about your project, challenge, or question..." rows="6" required class="w-full resize-none"></textarea>
                     </div>
 
                     <button type="submit" class="btn-primary w-full">Send Message</button>
                 </form>
             </div>
 
-            <div class="mt-16 text-center">
-                <p class="text-slate-400 mb-6">Or reach out directly:</p>
-                <div class="flex gap-6 justify-center flex-wrap">
-                    <a href="mailto:swapniljoijode22@gmail.com" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-500 transition">
-                        <span class="text-cyan-400 font-semibold">📧</span> swapniljoijode22@gmail.com
+            <div class="text-center fade-in-up" style="animation-delay: 0.2s;">
+                <p class="text-slate-400 mb-8">Or reach out directly:</p>
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <a href="mailto:swapniljoijode22@gmail.com" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-400 transition font-medium">
+                        📧 swapniljoijode22@gmail.com
                     </a>
-                    <a href="tel:+16179619478" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-500 transition">
-                        <span class="text-cyan-400 font-semibold">📱</span> +1 (617) 961-9478
+                    <a href="tel:+16179619478" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-400 transition font-medium">
+                        📱 +1 (617) 961-9478
                     </a>
-                    <a href="https://linkedin.com/in/swapniljoijode" target="_blank" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-500 transition">
-                        <span class="text-cyan-400 font-semibold">👔</span> LinkedIn
+                    <a href="https://linkedin.com/in/swapniljoijode" target="_blank" class="glass-effect px-8 py-4 rounded-lg hover:border-cyan-400 transition font-medium">
+                        👔 LinkedIn
                     </a>
                 </div>
             </div>
@@ -538,8 +717,8 @@
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-700 py-8 px-6 text-center text-slate-400">
-        <p>© 2026 Swapnil Joijode. Crafted with attention to detail and modern analytics expertise.</p>
+    <footer class="border-t py-12 px-6 text-center text-slate-500 text-sm" style="border-color: var(--border-color);">
+        <p>© 2026 Swapnil Joijode. Built with attention to detail and a passion for data-driven decisions.</p>
     </footer>
 
     <script>
@@ -550,33 +729,29 @@
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Get form data
             const formData = {
                 from_name: this.from_name.value,
-                phone: this.phone.value,
                 from_email: this.from_email.value,
+                phone: this.phone.value,
                 subject: this.subject.value,
                 message: this.message.value,
                 to_email: 'swapniljoijode22@gmail.com'
             };
 
-            // Validate all fields
-            if (!formData.from_name || !formData.phone || !formData.from_email || !formData.subject || !formData.message) {
+            if (!formData.from_name || !formData.from_email || !formData.phone || !formData.subject || !formData.message) {
                 showToast('Please fill in all fields', 'error');
                 return;
             }
 
-            // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
 
-            // Send email using EmailJS
             emailjs.send('REPLACE_WITH_SERVICE_ID', 'REPLACE_WITH_TEMPLATE_ID', {
                 from_name: formData.from_name,
-                phone: formData.phone,
                 from_email: formData.from_email,
+                phone: formData.phone,
                 subject: formData.subject,
                 message: formData.message,
                 to_email: formData.to_email
@@ -593,7 +768,6 @@
             });
         });
 
-        // Toast notification function
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = type === 'success' ? 'success-toast' : 'error-toast';
@@ -605,7 +779,6 @@
             }, 4000);
         }
 
-        // Smooth scroll behavior for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
