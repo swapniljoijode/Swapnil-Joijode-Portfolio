@@ -21,46 +21,41 @@ export default function ExperienceView() {
   // Highlight verified figures and key tools inside a bullet.
   const formatHighlight = (text: string) => {
     const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const keywords = [
+    const keywords: { key: string; class: string }[] = [
       { key: '~70 to under 15', class: 'text-brand-primary-bright font-mono font-medium' },
       { key: '90 to 55 minutes', class: 'text-brand-primary-bright font-mono font-medium' },
       { key: '6–7 hours to 2–3 hours', class: 'text-brand-primary-bright font-mono font-medium' },
       { key: '10 GB to 1 GB', class: 'text-brand-primary-bright font-mono font-medium' },
       { key: '10 to 2 minutes', class: 'text-brand-primary-bright font-mono font-medium' },
       { key: '0.58% to 0.18%', class: 'text-rose-400 font-mono font-medium' },
-      { key: '50+ KPI definitions', class: 'text-slate-200 font-medium' },
       { key: '50+ governed business metrics', class: 'text-slate-200 font-medium' },
-      { key: 'dbt', class: 'text-brand-primary-bright font-medium' },
-      { key: 'Airflow', class: 'text-teal-400' },
-      { key: 'Snowflake', class: 'text-teal-400' },
-      { key: 'Databricks', class: 'text-teal-400' },
-      { key: 'Power BI', class: 'text-yellow-400' },
+      { key: '50+ KPI definitions', class: 'text-slate-200 font-medium' },
       { key: 'GitLab CI/CD', class: 'text-teal-400 font-mono' },
+      { key: 'Power BI', class: 'text-yellow-400' },
+      { key: 'Databricks', class: 'text-teal-400' },
+      { key: 'Snowflake', class: 'text-teal-400' },
+      { key: 'Airflow', class: 'text-teal-400' },
+      { key: 'dbt', class: 'text-brand-primary-bright font-medium' },
     ];
 
-    let formatted = text;
-    keywords
-      .slice()
-      .sort((a, b) => b.key.length - a.key.length)
-      .forEach((item) => {
-        const regex = new RegExp(`(${escape(item.key)})`, 'g');
-        formatted = formatted.replace(regex, `::START::${item.class}::MID::$1::END::`);
-      });
+    // Longest keys first so multi-word phrases win over their substrings.
+    const sorted = keywords.slice().sort((a, b) => b.key.length - a.key.length);
+    const classByKey = new Map(sorted.map((k) => [k.key, k.class]));
+    const pattern = new RegExp(`(${sorted.map((k) => escape(k.key)).join('|')})`, 'g');
 
-    const parts = formatted.split('::END::');
+    // String.split with a capturing group keeps the matches in the result.
+    const pieces = text.split(pattern);
     return (
       <span>
-        {parts.map((p, idx) => {
-          if (p.includes('::START::')) {
-            const [rest, actualText] = p.split('::MID::');
-            const className = rest.replace('::START::', '');
-            return (
-              <span key={idx} className={className}>
-                {actualText}
-              </span>
-            );
-          }
-          return p;
+        {pieces.map((piece, idx) => {
+          const cls = classByKey.get(piece);
+          return cls ? (
+            <span key={idx} className={cls}>
+              {piece}
+            </span>
+          ) : (
+            <React.Fragment key={idx}>{piece}</React.Fragment>
+          );
         })}
       </span>
     );
