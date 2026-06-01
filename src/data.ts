@@ -24,7 +24,7 @@ export const PROFILE: Profile = {
   linkedinLabel: 'linkedin.com/in/swapniljoijode22',
   githubUrl: 'https://github.com/swapniljoijode',
   githubLabel: 'github.com/swapniljoijode',
-  resumeFile: '/Swapnil-Joijode-Resume.docx',
+  resumeFile: '/Swapnil-Joijode-Resume.pdf',
   tagline: 'Turning unreliable pipelines into governed platforms teams can trust.',
   summary:
     "Data Engineer with 3+ years designing scalable Python-based data pipelines, modular transformation frameworks, and maintainable cloud data systems across Snowflake, Databricks, Spark, Airflow, and AWS. Engineering-first approach: clean modular code, automated schema tests and source-freshness checks, CI/CD, and observability built in. Proven track record improving pipeline reliability, reducing reconciliation defects, and delivering production-ready data platforms across logistics, retail, and financial services.",
