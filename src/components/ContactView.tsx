@@ -23,7 +23,7 @@ import { PROFILE } from '../data';
  * Create one at https://web3forms.com (just enter your email), then paste it here.
  * Until it's set, the form falls back to a mailto: link so nothing is lost.
  */
-const WEB3FORMS_ACCESS_KEY: string = 'YOUR_WEB3FORMS_ACCESS_KEY';
+const WEB3FORMS_ACCESS_KEY: string = 'ca053010-de11-410e-b29e-a237548e9404';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
