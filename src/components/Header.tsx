@@ -28,7 +28,7 @@ export default function Header({ activeTab, setActiveTab, onOpenResume }: Header
           className="flex cursor-pointer items-center space-x-2 text-lg font-bold tracking-wider text-brand-primary-bright font-mono transition-opacity hover:opacity-90"
           id="brand-logo"
         >
-          <span>SWAPNIL.LOG</span>
+          <span>SWAPNIL S JOIJODE</span>
         </div>
 
         {/* Navigation Items */}
