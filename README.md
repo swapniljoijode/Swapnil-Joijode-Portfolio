@@ -3,11 +3,16 @@
 Personal portfolio for **Swapnil Sanjay Joijode**, Data Engineer.
 Single-page site built with **Vite + React + TypeScript + Tailwind CSS**.
 
+**Repository:** https://github.com/swapniljoijode/portfolio-website
+
 ## Run locally
 
 **Prerequisites:** [Node.js](https://nodejs.org/) 18+ (includes npm).
 
 ```bash
+git clone https://github.com/swapniljoijode/portfolio-website.git
+cd portfolio-website
+
 npm install      # install dependencies
 npm run dev      # start dev server at http://localhost:3000
 npm run build    # production build → dist/
@@ -48,10 +53,11 @@ Until a key is set, the form falls back to opening the visitor's email client.
 
 ## Deploy (free)
 
-Hosted on **Vercel**:
+Hosted on **Vercel**, deployed from
+[`swapniljoijode/portfolio-website`](https://github.com/swapniljoijode/portfolio-website):
 
-1. Push this repo to GitHub.
-2. On [vercel.com](https://vercel.com), **Add New → Project → Import** the repo.
+1. Push changes to the `main` branch on GitHub.
+2. On [vercel.com](https://vercel.com), **Add New → Project → Import** `portfolio-website`.
 3. Vercel auto-detects Vite (build `npm run build`, output `dist`). Click **Deploy**.
 
-Every push to the default branch redeploys automatically.
+Every push to `main` redeploys automatically.
