@@ -3,9 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect } from 'react';
-import { X, Download, Terminal, Mail, MapPin, Award, BookOpen } from 'lucide-react';
-import { PROFILE, WORK_HISTORY, EDUCATION, CERTIFICATIONS, CORE_TECH } from '../data';
+import { useEffect } from 'react';
+import { X, Download, Terminal, Mail, MapPin, Award, BookOpen, ExternalLink } from 'lucide-react';
+import { PROFILE, WORK_HISTORY, EDUCATION, CERTIFICATIONS, CORE_TECH, PROJECTS } from '../data';
+
+const GithubIcon = () => (
+  <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor" aria-hidden="true">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+      .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+      -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.58c.68 0
+      1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+      1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01
+      1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+  </svg>
+);
 
 interface ResumeModalProps {
   onClose: () => void;
@@ -90,7 +103,7 @@ export default function ResumeModal({ onClose }: ResumeModalProps) {
 
           {/* Grid distribution */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Left Col: Experience */}
+            {/* Left Col: Experience + Projects */}
             <div className="md:col-span-2 space-y-6">
               <h3 className="font-mono text-xs font-bold tracking-widest text-brand-primary uppercase border-b border-brand-border/40 pb-1.5">
                 // PROFESSIONAL EXPERIENCE
@@ -113,6 +126,67 @@ export default function ResumeModal({ onClose }: ResumeModalProps) {
                     </ul>
                   </div>
                 ))}
+              </div>
+
+              {/* Key Projects */}
+              <div className="space-y-3 pt-2">
+                <h3 className="font-mono text-xs font-bold tracking-widest text-brand-primary uppercase border-b border-brand-border/40 pb-1.5">
+                  // KEY PROJECTS
+                </h3>
+                <div className="space-y-3">
+                  {PROJECTS.filter((p) => p.githubUrl).map((proj) => (
+                    <div key={proj.id} className="rounded border border-brand-border bg-brand-bg/40 px-4 py-3 space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="space-y-0.5">
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-brand-primary-bright font-bold">
+                            {proj.architectureBadge}
+                          </span>
+                          <h4 className="text-sm font-bold text-white leading-snug">{proj.name}</h4>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {proj.githubUrl && (
+                            <a
+                              href={proj.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-1 font-mono text-[10px] text-brand-muted hover:text-brand-primary-bright transition-colors"
+                              title="View on GitHub"
+                            >
+                              <GithubIcon />
+                              <span>GitHub</span>
+                            </a>
+                          )}
+                          {proj.websiteUrl && (
+                            <a
+                              href={proj.websiteUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-1 font-mono text-[10px] text-brand-primary-bright hover:text-white transition-colors"
+                              title="Live demo"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              <span>Demo</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {proj.stats.map((st, i) => (
+                          <span key={i} className="font-mono text-[10px] text-brand-muted">
+                            <span className="text-brand-primary-bright font-bold">{st.value}</span> {st.label}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        {proj.tech.slice(0, 5).map((t) => (
+                          <span key={t} className="rounded bg-brand-card border border-brand-border/60 px-2 py-0.5 font-mono text-[9px] text-slate-400">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 

@@ -3,15 +3,123 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
-import { Terminal, Code, Copy, Check } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { Terminal, Code, Copy, Check, ExternalLink, RefreshCw } from 'lucide-react';
 import { PROJECTS } from '../data';
+
+const GithubIcon = () => (
+  <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor" aria-hidden="true">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+      .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+      -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.58c.68 0
+      1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+      1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01
+      1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+  </svg>
+);
+
+// ── Sync helpers ────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = 'portfolio_synced_projects';
+
+interface SyncedData {
+  description: string;
+  syncedAt: string;
+}
+
+function loadSynced(): Record<string, SyncedData> {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveSynced(data: Record<string, SyncedData>) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function githubRawUrl(repoUrl: string): string {
+  // https://github.com/USER/REPO → raw README
+  const match = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+  if (!match) return '';
+  return `https://raw.githubusercontent.com/${match[1]}/${match[2]}/main/README.md`;
+}
+
+function parseReadme(raw: string): string {
+  const lines = raw.split('\n');
+  const sections: { heading: string; body: string[] }[] = [];
+  let current: { heading: string; body: string[] } | null = null;
+
+  for (const line of lines) {
+    const h = line.match(/^#{1,3}\s+(.+)/);
+    if (h) {
+      if (current) sections.push(current);
+      current = { heading: h[1].trim(), body: [] };
+    } else if (current && line.trim()) {
+      current.body.push(line.trim());
+    }
+  }
+  if (current) sections.push(current);
+
+  // Map heading keywords → BAR labels
+  const BACKGROUND_KEYS = ['background', 'context', 'overview', 'about', 'summary', 'executive'];
+  const ACTIONS_KEYS = ['action', 'what was built', 'built', 'implementation', 'how', 'architecture', 'approach'];
+  const RESULTS_KEYS = ['result', 'outcome', 'metric', 'performance', 'achievement', 'impact'];
+
+  const pick = (keys: string[]) =>
+    sections.find((s) => keys.some((k) => s.heading.toLowerCase().includes(k)));
+
+  const bg = pick(BACKGROUND_KEYS);
+  const ac = pick(ACTIONS_KEYS);
+  const rs = pick(RESULTS_KEYS);
+
+  const format = (label: string, sec: typeof bg) => {
+    if (!sec) return '';
+    const body = sec.body
+      .filter((l) => !l.startsWith('#') && !l.startsWith('|') && l.length > 20)
+      .slice(0, 3)
+      .join(' ')
+      .replace(/[*_`]/g, '')
+      .slice(0, 260);
+    return body ? `${label}: ${body}` : '';
+  };
+
+  const parts = [format('Background', bg), format('Actions', ac), format('Results', rs)].filter(Boolean);
+
+  if (parts.length) return parts.join('\n\n');
+
+  // Fallback: first meaningful paragraph
+  const fallback = lines
+    .filter((l) => l.trim().length > 40 && !l.startsWith('#') && !l.startsWith('|'))
+    .slice(0, 4)
+    .join(' ')
+    .replace(/[*_`]/g, '')
+    .slice(0, 400);
+  return fallback || 'No description found in README.';
+}
+
+function timeAgo(iso: string): string {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
+// ── Component ───────────────────────────────────────────────────────────────
 
 export default function ProjectsView() {
   const [activeProject, setActiveProject] = useState<string>(PROJECTS[0].id);
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
+  const [synced, setSynced] = useState<Record<string, SyncedData>>(loadSynced);
+  const [syncState, setSyncState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
   const currentProject = PROJECTS.find((p) => p.id === activeProject) || PROJECTS[0];
+  const syncedEntry = synced[currentProject.id];
+  const displayDescription = syncedEntry?.description || currentProject.description;
 
   const handleCopyCode = (codeText: string) => {
     navigator.clipboard.writeText(codeText);
@@ -19,14 +127,70 @@ export default function ProjectsView() {
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
+  const handleSync = useCallback(async () => {
+    const projectsWithGithub = PROJECTS.filter((p) => p.githubUrl);
+    if (!projectsWithGithub.length) return;
+
+    setSyncState('loading');
+    try {
+      const results: Record<string, SyncedData> = { ...synced };
+      await Promise.all(
+        projectsWithGithub.map(async (proj) => {
+          const url = githubRawUrl(proj.githubUrl!);
+          if (!url) return;
+          const res = await fetch(url);
+          if (!res.ok) return;
+          const raw = await res.text();
+          const description = parseReadme(raw);
+          if (description) {
+            results[proj.id] = { description, syncedAt: new Date().toISOString() };
+          }
+        })
+      );
+      saveSynced(results);
+      setSynced(results);
+      setSyncState('done');
+      setTimeout(() => setSyncState('idle'), 3000);
+    } catch {
+      setSyncState('error');
+      setTimeout(() => setSyncState('idle'), 3000);
+    }
+  }, [synced]);
+
+  const syncLabel =
+    syncState === 'loading' ? 'Syncing…' :
+    syncState === 'done'    ? 'Synced ✓' :
+    syncState === 'error'   ? 'Failed' :
+    'Sync with GitHub';
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 dot-grid min-h-screen" id="projects-screen">
       {/* breadcrumb */}
-      <div className="flex items-center space-x-2 text-xs font-mono tracking-wider text-brand-muted uppercase mb-4" id="projects-header-breadcrumb">
-        <Terminal className="h-4.5 w-4.5 text-brand-primary-bright" />
-        <span>PROJECTS</span>
-        <span className="text-brand-primary">/</span>
-        <span className="text-brand-text">CASE STUDIES</span>
+      <div className="flex items-center justify-between mb-4" id="projects-header-breadcrumb">
+        <div className="flex items-center space-x-2 text-xs font-mono tracking-wider text-brand-muted uppercase">
+          <Terminal className="h-4.5 w-4.5 text-brand-primary-bright" />
+          <span>PROJECTS</span>
+          <span className="text-brand-primary">/</span>
+          <span className="text-brand-text">CASE STUDIES</span>
+        </div>
+        <button
+          onClick={handleSync}
+          disabled={syncState === 'loading'}
+          className={`flex items-center space-x-1.5 rounded border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors ${
+            syncState === 'loading'
+              ? 'border-brand-primary/40 text-brand-primary cursor-wait'
+              : syncState === 'done'
+              ? 'border-emerald-500/40 text-emerald-400'
+              : syncState === 'error'
+              ? 'border-red-500/40 text-red-400'
+              : 'border-brand-border text-brand-muted hover:border-brand-primary/50 hover:text-brand-primary-bright cursor-pointer'
+          }`}
+          title="Fetch latest READMEs from GitHub and refresh project descriptions"
+          id="sync-github-btn"
+        >
+          <RefreshCw className={`h-3 w-3 ${syncState === 'loading' ? 'animate-spin' : ''}`} />
+          <span>{syncLabel}</span>
+        </button>
       </div>
 
       {/* Hero Header */}
@@ -35,7 +199,7 @@ export default function ProjectsView() {
           Production-Pattern <span className="text-brand-primary-bright">Data Projects</span> &amp; Pipelines.
         </h1>
         <p className="text-sm sm:text-base md:text-lg text-brand-muted max-w-3xl leading-relaxed">
-          End-to-end pipelines, governed dimensional models, and ML serving — drawn from professional work and self-directed case studies.
+          End-to-end pipelines, governed dimensional models, and full-stack engineering — self-directed case studies targeting Data Engineer and Analytics Engineer roles.
         </p>
       </div>
 
@@ -49,6 +213,7 @@ export default function ProjectsView() {
           <div className="space-y-3">
             {PROJECTS.map((proj) => {
               const isSelected = proj.id === activeProject;
+              const hasSynced = !!synced[proj.id];
               return (
                 <button
                   key={proj.id}
@@ -67,7 +232,12 @@ export default function ProjectsView() {
                     <span className="font-mono text-[9px] uppercase tracking-wider text-brand-primary-bright font-bold">
                       {proj.architectureBadge}
                     </span>
-                    {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-brand-primary-bright animate-pulse" />}
+                    <div className="flex items-center space-x-1.5">
+                      {hasSynced && (
+                        <span className="font-mono text-[8px] text-emerald-400/70 uppercase tracking-wider">synced</span>
+                      )}
+                      {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-brand-primary-bright animate-pulse" />}
+                    </div>
                   </div>
                   <h3 className="font-bold text-sm sm:text-base tracking-tight mb-2">{proj.name}</h3>
                   <div className="flex flex-wrap gap-1.5">
@@ -90,24 +260,55 @@ export default function ProjectsView() {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
 
             {/* Header info */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-brand-border pb-4 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between border-b border-brand-border pb-4 gap-4">
               <div className="space-y-1">
                 <span className="font-mono text-[10px] tracking-widest text-brand-primary-bright font-bold uppercase">
                   {currentProject.architectureBadge}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">{currentProject.name}</h2>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-brand-primary/10 border border-brand-primary/30 px-3 py-1 font-mono text-[10px] font-bold text-brand-primary-bright uppercase">
                   {currentProject.context}
                 </span>
+                {currentProject.githubUrl && (
+                  <a
+                    href={currentProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1.5 rounded-full bg-brand-card border border-brand-border px-3 py-1 font-mono text-[10px] text-brand-muted hover:text-white hover:border-brand-primary/60 transition-colors"
+                    title="View on GitHub"
+                  >
+                    <GithubIcon />
+                    <span>GitHub</span>
+                  </a>
+                )}
+                {currentProject.websiteUrl && (
+                  <a
+                    href={currentProject.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/40 px-3 py-1 font-mono text-[10px] text-brand-primary-bright hover:bg-brand-primary/20 transition-colors"
+                    title="View live demo"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    <span>Live Demo</span>
+                  </a>
+                )}
               </div>
             </div>
 
-            {/* In-depth description */}
+            {/* Description — synced content shown with indicator */}
             <div className="space-y-2">
-              <h4 className="font-mono text-xs font-bold text-brand-primary">// OVERVIEW</h4>
-              <p className="text-sm text-slate-300 leading-relaxed">{currentProject.description}</p>
+              <div className="flex items-center justify-between">
+                <h4 className="font-mono text-xs font-bold text-brand-primary">// OVERVIEW</h4>
+                {syncedEntry && (
+                  <span className="font-mono text-[9px] text-emerald-400/70 uppercase tracking-wider">
+                    synced {timeAgo(syncedEntry.syncedAt)}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">{displayDescription}</p>
             </div>
 
             {/* Performance KPIs Grid */}

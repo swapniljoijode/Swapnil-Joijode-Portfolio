@@ -27,12 +27,12 @@ export const PROFILE: Profile = {
   resumeFile: '/Swapnil-Joijode-Resume.pdf',
   tagline: 'Turning unreliable pipelines into governed platforms teams can trust.',
   summary:
-    "Data Engineer with 3+ years designing scalable Python-based data pipelines, modular transformation frameworks, and maintainable cloud data systems across Snowflake, Databricks, Spark, Airflow, and AWS. Engineering-first approach: clean modular code, automated schema tests and source-freshness checks, CI/CD, and observability built in. Proven track record improving pipeline reliability, reducing reconciliation defects, and delivering production-ready data platforms across logistics, retail, and financial services.",
+    "Data Engineer with 3+ years of experience designing and maintaining ETL pipelines, data warehouse solutions, and scalable data workflows using SQL, Python, Airflow, Snowflake, and Databricks. Experienced in writing complex SQL queries, scripting automated data processing workflows, and implementing data quality measures to maintain data integrity across 2–3M+ records monthly. Skilled in data modelling, pipeline designs, workflow orchestration, and cross-functional collaboration across logistics, retail, and finance domains.",
 };
 
 export const QUICK_STATS: QuickStat[] = [
-  { label: 'Years in Data', value: '3+' },
-  { label: 'Logistics records / month', value: '2–3M' },
+  { label: 'Years in Data Engineering', value: '3+' },
+  { label: 'End-to-end pipelines shipped', value: '3' },
   { label: 'Governed KPIs delivered', value: '50+' },
 ];
 
@@ -157,6 +157,7 @@ export const PROJECTS: ProjectItem[] = [
       { label: 'Passing tests', value: '87 · 0 failures' },
     ],
     tech: ['Python', 'PostgreSQL', 'dbt', 'Docker', 'SQLAlchemy', 'pytest'],
+    githubUrl: 'https://github.com/swapniljoijode/Game-Data-generator-and-ETL-Pipeline',
     codeLabel: 'fct_player_performance.sql',
     pipelineCode: `-- dbt star-schema mart: governed, fully tested
 {{ config(materialized='table') }}
@@ -177,53 +178,80 @@ GROUP BY 1, 2, 3
   },
   {
     id: 'proj-2',
-    name: 'Multi-Channel Brand Performance Analytics',
-    context: 'Vision Group Retail Inc.',
+    name: 'Fashion Retail Intelligence Platform',
+    context: 'Individual Case Study',
     description:
-      'Consolidated fragmented brand-performance data across multiple sales channels into a single governed analytics layer — eliminating inconsistent metrics and enabling self-serve access for 40+ stakeholders across sales, marketing, and operations.',
-    architectureBadge: 'STAR SCHEMA / POWER BI',
+      'Zero-cost enterprise analytics platform for fashion retail built on a full medallion architecture. A Python data generator produces ~1M rows across sales, inventory, returns, web events, and markdowns — loaded into Cloudflare R2 then transformed through DuckDB and Snowflake by 24 dbt models with SCD Type 2 surrogate keys, delivered as a static Next.js dashboard on Vercel that survives warehouse trial expiry.',
+    architectureBadge: 'MEDALLION / DBT / SNOWFLAKE',
     stats: [
-      { label: 'Rows governed', value: '1.2M+' },
-      { label: 'Stakeholders', value: '40+' },
-      { label: 'Reporting model', value: 'Self-serve' },
+      { label: 'Synthetic rows', value: '~1M' },
+      { label: 'dbt models', value: '24' },
+      { label: 'Tests passing', value: '190 · 100%' },
     ],
-    tech: ['SQL', 'Dimensional Modeling', 'Power BI', 'DAX'],
-    codeLabel: 'brand_performance_metric.dax',
-    pipelineCode: `// Governed, reusable DAX measure on a star-schema model
-Net Revenue (YoY %) =
-VAR _current =
-    CALCULATE ( [Net Revenue], DATESYTD ( 'Dim Date'[Date] ) )
-VAR _prior =
-    CALCULATE (
-        [Net Revenue],
-        SAMEPERIODLASTYEAR ( DATESYTD ( 'Dim Date'[Date] ) )
-    )
-RETURN
-    DIVIDE ( _current - _prior, _prior )`,
+    tech: ['Python', 'DuckDB', 'Snowflake', 'dbt', 'Airflow', 'Cloudflare R2', 'Next.js', 'GitHub Actions', 'Docker'],
+    githubUrl: 'https://github.com/swapniljoijode/Retail-Fashion-Intelligence',
+    websiteUrl: 'https://retail-fashion-intelligence.vercel.app',
+    codeLabel: 'fct_sales.sql',
+    pipelineCode: `-- Grain: one row per order line.
+-- SCD Type 2 date-range joins resolve surrogate keys active at time of sale.
+{{ config(materialized='table') }}
+
+WITH stg_sales AS (SELECT * FROM {{ ref('stg_bronze__fact_sales') }}),
+dim_product   AS (SELECT product_key, product_id, effective_date, expiry_date
+                  FROM {{ ref('int_product__scd2_surrogate') }}),
+dim_customer  AS (SELECT customer_key, customer_id, effective_date, expiry_date
+                  FROM {{ ref('int_customer__scd2_surrogate') }})
+
+SELECT
+    s.sale_key, s.order_id, s.order_line_id, s.sale_date,
+    s.gross_revenue, s.discount_amount, s.net_revenue,
+    s.cogs, s.gross_margin,
+    COALESCE(p.product_key,  -1) AS product_key,
+    COALESCE(c.customer_key, -1) AS customer_key
+FROM stg_sales AS s
+LEFT JOIN dim_product  AS p
+    ON s.product_id = p.product_id
+   AND s.sale_date BETWEEN p.effective_date AND COALESCE(p.expiry_date, CURRENT_DATE)
+LEFT JOIN dim_customer AS c
+    ON s.customer_id = c.customer_id
+   AND s.sale_date BETWEEN c.effective_date AND COALESCE(c.expiry_date, CURRENT_DATE)
+-- 190 dbt tests: uniqueness, not-null, referential integrity, accepted-values`,
   },
   {
     id: 'proj-3',
-    name: 'OTT Subscriber Churn Prediction Pipeline',
+    name: 'Project Tracker',
     context: 'Individual Case Study',
     description:
-      'End-to-end pipeline operationalising subscriber-churn risk for an OTT platform — from raw event ingestion through feature engineering to production-ready model serving as a consumable data product.',
-    architectureBadge: 'ML PIPELINE / AWS',
+      'A full-stack project-tracking application built as a companion to the Fashion Retail Intelligence Platform — and a portfolio-grade demonstration of engineering range in its own right. Separates data from deployment: task state flows through a REST API backed by Neon Postgres; the Next.js app rebuilds only when code changes, never when a status changes. Integrates with the retail repo through a versioned migration template and API contract rather than shared code.',
+    architectureBadge: 'FULL-STACK / NEXT.JS / POSTGRES',
     stats: [
-      { label: 'Model signal', value: '0.75 TPR @ 0.20 FPR' },
-      { label: 'Serving', value: 'Flask API' },
-      { label: 'Stack', value: 'AWS Glue · SageMaker' },
+      { label: 'API layer', value: 'Next.js Routes' },
+      { label: 'Datastore', value: 'Neon Postgres' },
+      { label: 'Exports', value: 'Excel · CSV · PPTX' },
     ],
-    tech: ['Python', 'AWS Glue', 'SageMaker', 'S3', 'Flask', 'scikit-learn'],
-    codeLabel: 'serve_churn_model.py',
-    pipelineCode: `# Flask endpoint serving the trained churn model as a data product
-@app.route("/predict", methods=["POST"])
-def predict():
-    features = build_feature_vector(request.get_json())
-    proba = model.predict_proba([features])[0][1]
-    return jsonify({
-        "churn_probability": round(float(proba), 4),
-        "risk_segment": "high" if proba >= 0.5 else "low",
-    })`,
+    tech: ['Next.js 15', 'TypeScript', 'Neon Postgres', 'Drizzle ORM', 'Recharts', 'Docker', 'GitHub Actions', 'TailwindCSS'],
+    githubUrl: 'https://github.com/swapniljoijode/Project-Tracker',
+    websiteUrl: 'https://project-tracker-lyart-seven.vercel.app',
+    codeLabel: 'drizzle.config.ts',
+    pipelineCode: `// Drizzle ORM schema — task audit trail separated from current state
+// so every status change is captured once and consistently.
+export const task = pgTable('task', {
+  taskId:        serial('task_id').primaryKey(),
+  phaseId:       integer('phase_id').references(() => phase.phaseId),
+  title:         varchar('title', { length: 200 }).notNull(),
+  currentStatus: statusEnum('current_status').notNull().default('ongoing'),
+  createdAt:     timestamp('created_at').defaultNow(),
+});
+
+export const taskEvent = pgTable('task_event', {
+  eventId:   serial('event_id').primaryKey(),
+  taskId:    integer('task_id').references(() => task.taskId),
+  status:    statusEnum('status').notNull(),
+  note:      text('note'),
+  commitRef: varchar('commit_ref', { length: 80 }),
+  timestamp: timestamp('timestamp').defaultNow(),
+});
+// taskEvent = full audit trail; task.currentStatus = fast read surface`,
   },
 ];
 
@@ -247,11 +275,10 @@ export const EDUCATION: EducationItem[] = [
 ];
 
 export const CERTIFICATIONS: CertificationItem[] = [
-  { id: 'cert-1', name: 'Data Engineer Associate', issuer: 'DataCamp' },
-  { id: 'cert-2', name: 'ETL Testing', issuer: 'Udemy' },
-  { id: 'cert-3', name: 'Data Warehousing', issuer: 'Udemy' },
-  { id: 'cert-4', name: 'Google Data Analytics', issuer: 'Google' },
-  { id: 'cert-5', name: 'Python Programming', issuer: 'Certification' },
+  { id: 'cert-1', name: 'Data Engineer Associate', issuer: 'DataCamp · Mar 2025' },
+  { id: 'cert-2', name: 'Google Data Analytics', issuer: 'Coursera · May 2024' },
+  { id: 'cert-3', name: 'ETL Testing', issuer: 'Udemy · Apr 2024' },
+  { id: 'cert-4', name: 'Data Warehousing', issuer: 'Udemy · Feb 2024' },
 ];
 
 // Flat skill list for the resume modal "core tech" chips.

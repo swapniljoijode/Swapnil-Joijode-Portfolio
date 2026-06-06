@@ -56,6 +56,8 @@ export interface ProjectItem {
   tech: string[];
   codeLabel?: string;
   pipelineCode?: string;
+  githubUrl?: string;
+  websiteUrl?: string;
 }
 
 export interface EducationItem {
